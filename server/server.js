@@ -4,11 +4,14 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import api from './routes/api.js';
 import secrets from './config/secrets.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 4000;
 
-mongoose.connect(secrets.mongo_connection);
+mongoose.connect(process.env.MONGO_CONNECTION);
 
 function allowCrossDomain(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
