@@ -3,8 +3,7 @@
 .idea/*
 .vs_code/
 .vs_code/*
-node_modules
-node_modules/*
+/node_modules
 public/
 public/*
 config/secrets.js

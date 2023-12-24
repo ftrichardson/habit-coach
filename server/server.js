@@ -2,18 +2,15 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import secrets from './config/secrets';
-import routes from './routes';
+import api from './routes/api.js';
+import secrets from './config/secrets.js';
 
 const app = express();
 const port = process.env.PORT || 4000;
 
-mongoose.connect(secrets.mongo_connection, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(secrets.mongo_connection);
 
-const allowCrossDomain = (req, res, next) => {
+function allowCrossDomain(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
     'Access-Control-Allow-Headers',
@@ -21,14 +18,14 @@ const allowCrossDomain = (req, res, next) => {
   );
   res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
   next();
-};
+}
 
 app.use(cors());
 app.use(allowCrossDomain);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-routes(app);
+api(app);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
