@@ -1,6 +1,9 @@
-import { router as habitsRouter } from './habits.js';
-import { router as usersRouter } from './users.js';
-import { router as friendsRouter } from './friends.js';
+import express from 'express';
+import defineHabitsRoutes from './habits.js';
+import defineUsersRoutes from './users.js';
+import defineFriendsRoutes from './friends.js';
+
+const router = express.Router();
 
 /**
  * Attaches routes to the Express app.
@@ -8,19 +11,16 @@ import { router as friendsRouter } from './friends.js';
  * @param {Object} app - Express application.
  * @param {Object} router - Express router.
  */
- export default function (app, router) {
-    /**
-     * Attaches habits routes under the '/api' path.
-     */
-    app.use('/api', habitsRouter);
+ export default function (app) {
+    // Attaching habits routes under the '/api' path.
+    defineHabitsRoutes(router);
+    app.use('/api', router);
 
-    /**
-     * Attaches users routes under the '/api' path.
-     */
-    app.use('/api', usersRouter);
+    // Attaching users routes under the '/api' path.
+    defineUsersRoutes(router);
+    app.use('/api', router);
 
-    /**
-     * Attaches friends routes under the '/api' path.
-     */
-    app.use('/api', friendsRouter);
+    // Attaching friends routes under the '/api' path.
+    defineFriendsRoutes(router);
+    app.use('/api', router);
 };
