@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { auth, register } from './firebase';
@@ -45,9 +45,9 @@ const Register = () => {
       return;
     }
     if (user) navigate('../Home');
-  }, [user, loading]);
+  }, [user, loading, navigate]);
 
-  const fetchExistingUsers = async () => {
+  const fetchExistingUsers = useCallback(async () => {
     if (!loading) {
       try {
         const response = await axios.get(`${BASE_URL}/api/users`);
@@ -56,14 +56,14 @@ const Register = () => {
         console.log(error);
       }
     }
-  };
+  }, [loading]);
 
   useEffect(() => {
     if (!loading && !loaded) {
       fetchExistingUsers();
       setLoaded(true);
     }
-  }, [loading, loaded]);
+  }, [loading, loaded, fetchExistingUsers]);
 
   return (
     <Container

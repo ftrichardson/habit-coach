@@ -37,7 +37,7 @@ const Login = () => {
       return;
     }
     if (user) navigate('../Home');
-  }, [user, loading]);
+  }, [user, loading, navigate]);
 
   const handleLogin = async () => {
     if (!email) {

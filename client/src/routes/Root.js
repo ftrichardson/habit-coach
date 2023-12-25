@@ -17,11 +17,11 @@ const Root = () => {
                 <Heading as="h1" fontSize="4xl" textAlign="center" color="gray">
                   Building new habits{' '}
                   <Text as="span" color="teal.400">
-                    made easy
+                    made fun
                   </Text>
                 </Heading>
                 <Text textAlign="center" color="gray.400">
-                  Track your progress. Start working toward a better you today!
+                  Track your progress, befriend people, and start working toward a better you today!
                 </Text>
                 <Link to="../register">
                   <Button
@@ -30,7 +30,7 @@ const Root = () => {
                     bg="teal.400"
                     _hover={{ bg: 'teal.500' }}
                   >
-                    Get started
+                    Get Started
                   </Button>
                 </Link>
               </VStack>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Layout from '../../components/Layout';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +35,7 @@ const Friends = ({ currentRoute }) => {
     if (!user) navigate('../', {});
   }, [user, navigate]);
 
-  const getAllFriends = async () => {
+  const getAllFriends = useCallback(async () => {
     try {
       if (!loading) {
         const response = await axios.get(`${BASE_URL}/api/users/${user.email}/friends`);
@@ -51,7 +51,7 @@ const Friends = ({ currentRoute }) => {
         isClosable: true,
       });
     }
-  };
+  }, [loading, toast, user]);
 
   const getSearchedFriends = (event) => {
     setSearchTerm(event.target.value);
@@ -91,7 +91,7 @@ const Friends = ({ currentRoute }) => {
       getAllFriends();
       setLoaded(true);
     }
-  }, [loading, loaded]);
+  }, [loading, loaded, getAllFriends]);
 
   return (
     <Layout user={user} currentRoute='friends'>

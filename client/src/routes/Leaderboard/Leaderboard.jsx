@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../Auth/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import Layout from '../../components/Layout';
 import {
   Container,
   Heading,
@@ -42,7 +43,7 @@ const Leaderboard = () => {
     if (!user) navigate('../', {});
   }, [user, navigate]);
 
-  const getAllHabits = async () => {
+  const getAllHabits = useCallback(async () => {
     try {
       if (!loading) {
         const response = await axios.get(`${BASE_URL}/api/users`);
@@ -58,7 +59,7 @@ const Leaderboard = () => {
         isClosable: true,
       });
     }
-  };
+  }, [loading, toast]);
 
   const getDatesInRange = (startDate, endDate) => {
     var dates = [];
@@ -101,7 +102,7 @@ const Leaderboard = () => {
       getAllHabits();
       setLoaded(true);
     }
-  }, [loading, loaded]);
+  }, [loading, loaded, getAllHabits]);
 
   const uniqueHabits = new Set();
 

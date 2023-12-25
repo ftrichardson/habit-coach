@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 
 import Root from './routes/Root';
+import Home from './routes/Home/Home';
 import Login from './routes/Auth/Login';
 import Register from './routes/Auth/Register';
 import Leaderboard from './routes/Leaderboard/Leaderboard';
@@ -14,6 +15,10 @@ const routes = [
   {
     path: '/',
     element: <Root />,
+  },
+  {
+    path: '/home',
+    element: <Home />,
   },
   {
     path: '/register',
