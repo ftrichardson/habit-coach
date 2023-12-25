@@ -1,17 +1,48 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { createRoot } from 'react-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ChakraProvider } from '@chakra-ui/react';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import Root from './routes/Root';
+import Login from './routes/Auth/Login';
+import Register from './routes/Auth/Register';
+import Leaderboard from './routes/Leaderboard/Leaderboard';
+import Friends from './routes/Friends/Friends';
+import AddNewFriend from './routes/Friends/AddNewFriend';
+
+const routes = [
+  {
+    path: '/',
+    element: <Root />,
+  },
+  {
+    path: '/register',
+    element: <Register />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/leaderboard',
+    element: <Leaderboard />,
+  },
+  {
+    path: '/friends',
+    element: <Friends />,
+  },
+  {
+    path: '/addnewfriend',
+    element: <AddNewFriend />,
+  },
+];
+
+const router = createBrowserRouter(routes);
+
+const root = createRoot(document.getElementById('root'));
+
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <ChakraProvider>
+    <RouterProvider router={router} />
+  </ChakraProvider>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
