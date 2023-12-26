@@ -1,125 +1,161 @@
-import User from '../models/user.js';
-import express from 'express';
+const User = require('../models/user.js');
 
-const router = express.Router();
+// const ObjectId = require('mongoose').Types.ObjectId;
 
-/**
- * Defines routes related to user's friends.
- * 
- * @param {Object} router - Express router.
- * @returns {Object} - Express router.
- */
-export default function defineFriendsRoutes(router) {
-    const friendsRoute = router.route('/users/:email/friends');
-    const notFriendRoute = router.route('/users/:email/notfriends');
+module.exports = function (router) {
+  // const usersRoute = router.route('/users');
+  const friendsRoute = router.route('/users/:email/friends');
+  const NotFriendRoute = router.route('/users/:email/notfriends');
 
-    /**
-     * GET endpoint to fetch all friends of a user (name and email of friends).
-     */
-    friendsRoute.get(async function (req, res) {
-        try {
-        const email = req.params.email;
-        const user = await User.findOne({ email });
+  // ------------ USER ROUTE ------------
 
-        if (!user) {
-            return res.status(404).json({ message: 'ERROR: User not found!' });
-        }
+  //Api to fetch all friends of a user (name and email of friends)
+  friendsRoute.get(async function (req, res) {
+    try {
+      const email = req.params.email;
+      const user = await User.findOne({ email: email });
+      if (!user) {
+        res.status(404).json({
+          message: 'ERROR: User not found!',
+        });
+      } else {
+        friends_email = user['friends'];
+        if (friends_email.length !== 0) {
+          let friends_name_email = [];
+          let friends_data;
 
-        const friendsEmail = user.friends;
-        let friendsNameEmail = [];
+          for (let i = 0; i < friends_email.length; i++) {
+            let temp_list = [];
+            friends_data = await User.findOne({ email: friends_email[i] });
+            temp_list.push(friends_data['email']);
+            temp_list.push(friends_data['userName']);
 
-        if (friendsEmail.length !== 0) {
-            for (const friendEmail of friendsEmail) {
-            const friendData = await User.findOne({ email: friendEmail });
-            friendsNameEmail.push([friendData.email, friendData.userName]);
-            }
-        }
+            friends_name_email.push(temp_list);
+          }
 
-        res.json({ friendsNameEmail });
-        } catch (err) {
-        res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
-        }
-    });
-
-    /**
-     * PUT endpoint to remove a friend from the user's list.
-     */
-    friendsRoute.put(async function (req, res) {
-        try {
-        const email = req.params.email;
-        const user = await User.findOne({ email });
-
-        if (!user) {
-            return res.status(404).json({ message: 'ERROR: User not found!' });
-        }
-
-        await User.updateOne({ email }, { $pullAll: { friends: [req.body.friendEmail] } });
-
-        res.json({ message: 'Unfollowed Friend Successfully' });
-        } catch (err) {
-        res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
-        }
-    });
-
-    /**
-     * GET endpoint to get users who are not friends.
-     */
-    notFriendRoute.get(async function (req, res) {
-        try {
-        const email = req.params.email;
-        const user = await User.findOne({ email });
-
-        if (!user) {
-            return res.status(404).json({ message: 'ERROR: User not found!' });
-        }
-
-        let friendsEmail = user.friends;
-
-        if (friendsEmail.length === 0) {
-            const allUsers = await User.find({});
-            let notFriendsNameEmail = [];
-
-            for (const user of allUsers) {
-            notFriendsNameEmail.push([user.email, user.userName]);
-            }
-
-            return res.json({ notFriendsNameEmail });
+          res.json({
+            friends_name_email,
+          });
         } else {
-            const allUsers = await User.find({ email: { $nin: friendsEmail } });
-            let notFriendsNameEmail = [];
-
-            for (const user of allUsers) {
-            notFriendsNameEmail.push([user.email, user.userName]);
-            }
-
-            return res.json({ notFriendsNameEmail });
+          //friends list empty
+          let friends_name_email = [];
+          res.json({
+            friends_name_email,
+          });
         }
-        } catch (err) {
-        res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
+      }
+    } catch (err) {
+      res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
+    }
+  });
+
+  //API to remove a friends from user's list
+  friendsRoute.put(async function (req, res) {
+    try {
+      const email = req.params.email;
+      const user = await User.findOne({ email: email });
+      if (!user) {
+        res.status(404).json({
+          message: 'ERROR: User not found!',
+        });
+      } else {
+        await User.updateOne(
+          { email: email },
+          { $pullAll: { friends: [req.body.friendEmail] } }
+        );
+
+        res.json({
+          message: 'Unfollowed Friend Successfully',
+        });
+      }
+    } catch (err) {
+      res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
+    }
+  });
+
+  // API to get user who are not friends
+  NotFriendRoute.get(async function (req, res) {
+    try {
+      const email = req.params.email;
+      const user = await User.findOne({ email: email });
+      if (!user) {
+        res.status(404).json({
+          message: 'ERROR: User not found!',
+        });
+      } else {
+        console.log('else');
+
+        let friends_email = user['friends'];
+
+        console.log(friends_email);
+        if (friends_email.length === 0) {
+          //if user has no friends then display all
+          console.log('if');
+          const AllUsers = await User.find({});
+
+          let not_friends_name_email = [];
+
+          for (let i = 0; i < AllUsers.length; i++) {
+            let temp_list = [];
+            temp_list.push(AllUsers[i]['email']);
+            temp_list.push(AllUsers[i]['userName']);
+
+            not_friends_name_email.push(temp_list);
+          }
+
+          res.json({
+            not_friends_name_email,
+          });
+        } else {
+          console.log('else remove');
+
+          //{"email" : {$nin: ["parth@abc.com", "frn3@illinois.edu" ]}}
+          const AllUsers = await User.find({ email: { $nin: friends_email } });
+
+          // console.log(AllUsers)
+          let not_friends_name_email = [];
+
+          for (let i = 0; i < AllUsers.length; i++) {
+            let temp_list = [];
+            temp_list.push(AllUsers[i]['email']);
+            temp_list.push(AllUsers[i]['userName']);
+
+            not_friends_name_email.push(temp_list);
+          }
+
+          res.json({
+            not_friends_name_email,
+          });
         }
-    });
+      }
+    } catch (err) {
+      res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
+    }
+  });
 
-    /**
-     * PUT endpoint to add a friend to the user's list.
-     */
-    notFriendRoute.put(async function (req, res) {
-        try {
-        const email = req.params.email;
-        const user = await User.findOne({ email });
+  //API to add a friends to user's list
+  NotFriendRoute.put(async function (req, res) {
+    try {
+      const email = req.params.email;
+      const user = await User.findOne({ email: email });
+      if (!user) {
+        res.status(404).json({
+          message: 'ERROR: User not found!',
+        });
+      } else {
+        await User.updateOne(
+          { email: email },
+          { $addToSet: { friends: req.body.friendEmail } }
+        );
 
-        if (!user) {
-            return res.status(404).json({ message: 'ERROR: User not found!' });
-        }
+        res.json({
+          message: 'Followed Friend Successfully',
+        });
+      }
+    } catch (err) {
+      res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
+    }
+  });
 
-        await User.updateOne({ email }, { $addToSet: { friends: req.body.friendEmail } });
-
-        res.json({ message: 'Followed Friend Successfully' });
-        } catch (err) {
-        res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
-        }
-    });
-
-    return router;
+  return router;
 };
-
-export { router };
