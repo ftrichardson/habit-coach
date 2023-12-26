@@ -18,10 +18,14 @@ export default function (router) {
      */
     usersRoute.get(async (req, res) => {
         try {
-        const users = await User.find({});
-        res.json({ users });
+            console.log('GET /api/users endpoint hit');
+            const users = await User.find({});
+            console.log('Fetched users:', users);
+            res.json({ users });
+
         } catch (err) {
-        res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
+            console.error('Error in GET /api/users:', err);
+            res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
         }
     });
 
@@ -30,24 +34,29 @@ export default function (router) {
      */
     usersRoute.post(async (req, res) => {
         try {
-        const { userName, email } = req.body;
-        const existingUser = await User.findOne({ email });
+            console.log('POST /api/users endpoint hit');
+            console.log('Request body:', req.body);
+            const { userName, email } = req.body;
+            const existingUser = await User.findOne({ email });
 
-        if (existingUser) {
-            res.status(409).json({ message: 'ERROR: User with email already exists!' });
-            return;
-        }
+            if (existingUser) {
+                console.log('User already exists:', existingUser);
+                res.status(409).json({ message: 'ERROR: User with email already exists!' });
+                return;
+            }
 
-        const newUser = new User({
-            userName,
-            email,
-        });
+            const newUser = new User({
+                userName,
+                email,
+            });
 
-        await newUser.save();
-        const createdUser = await User.findOne({ email });
-        res.status(201).json({ message: 'OK: Created user!', data: createdUser });
+            await newUser.save();
+            const createdUser = await User.findOne({ email });
+            res.status(201).json({ message: 'OK: Created user!', data: createdUser });
+
         } catch (err) {
-        res.status(500).json({ message: 'ERROR: Unknown error occurred.', data: {} });
+            console.error('Error in POST /api/users:', err);
+            res.status(500).json({ message: 'ERROR: Unknown error occurred.', data: {} });
         }
     });
 
@@ -56,16 +65,16 @@ export default function (router) {
      */
     userRoute.get(async (req, res) => {
         try {
-        const email = req.params.email;
-        const user = await User.findOne({ email });
+            const email = req.params.email;
+            const user = await User.findOne({ email });
 
-        if (!user) {
-            res.status(404).json({ message: 'ERROR: User not found!' });
-        } else {
-            res.json({ user });
-        }
+            if (!user) {
+                res.status(404).json({ message: 'ERROR: User not found!' });
+            } else {
+                res.json({ user });
+            }
         } catch (err) {
-        res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
+            res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
         }
     });
 
@@ -74,8 +83,8 @@ export default function (router) {
      */
     router.route('/users/username/:username').get(async (req, res) => {
         try {
-        const userName = req.params.username;
-        const user = await User.findOne({ userName });
+            const userName = req.params.username;
+            const user = await User.findOne({ userName });
 
         if (!user) {
             res.status(404).json({ message: 'ERROR: User not found!' });
@@ -83,7 +92,7 @@ export default function (router) {
             res.json({ user });
         }
         } catch (err) {
-        res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
+            res.status(500).json({ message: 'ERROR: Unknown error occurred.' });
         }
     });
 
