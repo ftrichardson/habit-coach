@@ -1,23 +1,28 @@
-# Habit Coach
+<img width="1293" alt="habit" src="https://github.com/ftrichardson/habit-coach/assets/141296571/a9da50d4-eeab-4ed2-870a-a8af2042a7b7">
+Try it out here: https://habit-coach.netlify.app/
 
-Habit Coach is a web application designed to help users track and manage their habits. Whether you're looking to build new habits or break old ones, Habit Coach provides a user-friendly interface to monitor and visualize your progress.
+## Table of Contents
+<p>
+  <a href="#description">Description</a>
+</p>
+<p>
+  <a href="#third-party-libraries-used">Third-Party Libraries Used</a>
+</p>
+<p>
+  <a href="#demo">Demo</a>
+</p>
+<p>
+  <a href="#installation">Installation</a>
+</p>
+<p>
+  <a href="#plans">Plans</a>
+</p>
 
-## Features
+## Description
+This MERN stack application gamifies and socializes the experience of trying to improve yourself. Building habits is  difficult without an accountability mechanism. Therefore, I built this program to create more effective motivation to stick to habits and New Year resolutions, especially with 2024 fast approaching. 
 
-- **User Authentication:** Secure authentication using Firebase authentication services.
-- **Habit Tracking:** Track your habits with a simple and intuitive interface.
-- **Friendship:** Connect with friends, view their habits, and stay motivated together.
-- **Data Visualization:** Visualize your habit streaks and progress over time.
 
-## Tech Stack
-
-- **Frontend:** React.js, Chakra UI
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB
-- **Authentication:** Firebase Authentication
-- **Deployment:** Netlify (Frontend), Render (Backend)
-
-## Getting Started
+## Installation/Getting Started
 
 1. **Clone the repository:**
 
