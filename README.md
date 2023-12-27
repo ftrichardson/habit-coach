@@ -12,10 +12,7 @@ Try it out here: https://habit-coach.netlify.app/
   <a href="#demo">Demo</a>
 </p>
 <p>
-  <a href="#installation">Installation</a>
-</p>
-<p>
-  <a href="#plans">Plans</a>
+  <a href="#getting-started">Getting Started</a>
 </p>
 
 ## Tech Stack
@@ -27,10 +24,10 @@ Try it out here: https://habit-coach.netlify.app/
 - **Deployment:** Netlify (Frontend), Render (Backend)
 
 ## Description
-This MERN stack application gamifies and socializes the experience of trying to improve yourself. Building habits in solitude/without an accountability mechanism is hard, so I built this MERN web application to gamify and socialize the experience of trying to improve yourself, creating better motivation to stick to habits/2024 resolutions.
+Building habits in solitude/without an accountability mechanism is hard, so I built this MERN web application to gamify and socialize the experience of trying to improve yourself, creating better motivation to stick to habits/2024 resolutions.
 
 
-## Installation/Getting Started
+## Getting Started
 
 1. **Clone the repository:**
 
