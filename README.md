@@ -16,7 +16,7 @@ Try it out here: https://habit-coach.netlify.app/
 </p>
 
 ## Description
-Building habits in solitude/without an accountability mechanism is hard, so I built this MERN web application to gamify and socialize the experience of trying to improve yourself, creating better motivation to stick to habits/2024 resolutions.
+Building habits in solitude/without an accountability mechanism is hard, so this MERN web application gamifies/socializes the experience of trying to improve yourself, encouraging better motivation to stick to habits/2024 resolutions.
 
 ## Tech Stack
 
