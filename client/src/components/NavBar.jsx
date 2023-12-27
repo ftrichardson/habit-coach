@@ -35,7 +35,7 @@ export default function NavBar({ currentRoute, user }) {
         {currentRoute !== 'root' && !isSmallWidth && (
           <Link href='/' style={{ textDecoration: 'none' }}>
             <Heading size='md' fontFamily={'Unbounded'}>
-              Habit Tracker
+              Habit Coach
             </Heading>
           </Link>
         )}
