@@ -150,6 +150,7 @@ export default function Friendfind() {
                         </ListItem>
                       );
                     }
+                    return null;
                   })}
             </List>
           </VStack>

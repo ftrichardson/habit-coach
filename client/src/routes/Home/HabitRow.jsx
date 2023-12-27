@@ -216,7 +216,7 @@ export default function HabitRow({
 
     for (let i = 0; i < allDates.length; i++) {
       let dateString = moment(allDates[i]).format('YYYY-MM-DD');
-      if (!dateString in stateDict) {
+      if (!(dateString in stateDict)) {
         return currentStreak;
       } else if (stateDict[dateString] === 1) {
         currentStreak++;
