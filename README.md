@@ -15,16 +15,22 @@ Try it out here: https://habit-coach.netlify.app/
   <a href="#getting-started">Getting Started</a>
 </p>
 
-## Tech Stack
-
-- **Frontend:** React.js, Chakra UI
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB
-- **Authentication:** Firebase Authentication
-- **Deployment:** Netlify (Frontend), Render (Backend)
-
 ## Description
 Building habits in solitude/without an accountability mechanism is hard, so I built this MERN web application to gamify and socialize the experience of trying to improve yourself, creating better motivation to stick to habits/2024 resolutions.
+
+## Tech Stack
+
+- Frontend: React.js, Chakra UI
+- Backend: Node.js, Express.js
+- Database: MongoDB
+- Authentication: Firebase
+- Deployment: Netlify (Frontend), Render (Backend)
+
+## Demo
+
+
+https://github.com/ftrichardson/habit-coach/assets/141296571/5d9d2ba1-5480-4ea6-a1ef-b78273b66b55
+
 
 
 ## Getting Started
