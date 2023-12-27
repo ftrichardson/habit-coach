@@ -6,7 +6,7 @@ Try it out here: https://habit-coach.netlify.app/
   <a href="#description">Description</a>
 </p>
 <p>
-  <a href="#third-party-libraries-used">Third-Party Libraries Used</a>
+  <a href="#tech-stack">Tech Stack</a>
 </p>
 <p>
   <a href="#demo">Demo</a>
@@ -18,8 +18,16 @@ Try it out here: https://habit-coach.netlify.app/
   <a href="#plans">Plans</a>
 </p>
 
+## Tech Stack
+
+- **Frontend:** React.js, Chakra UI
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB
+- **Authentication:** Firebase Authentication
+- **Deployment:** Netlify (Frontend), Render (Backend)
+
 ## Description
-This MERN stack application gamifies and socializes the experience of trying to improve yourself. Building habits is  difficult without an accountability mechanism. Therefore, I built this program to create more effective motivation to stick to habits and New Year resolutions, especially with 2024 fast approaching. 
+This MERN stack application gamifies and socializes the experience of trying to improve yourself. Building habits in solitude/without an accountability mechanism is hard, so I built this MERN web application to gamify and socialize the experience of trying to improve yourself, creating better motivation to stick to habits/2024 resolutions.
 
 
 ## Installation/Getting Started
