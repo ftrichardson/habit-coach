@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+
 import axios from 'axios';
+
 import { useDisclosure, useToast } from '@chakra-ui/react';
+
 import {
   Button,
   FormControl,
@@ -19,23 +22,25 @@ import {
   RadioGroup,
   VStack,
 } from '@chakra-ui/react';
+
 import { GrFormEdit } from 'react-icons/gr';
+
 import { IconButton } from '@chakra-ui/react';
-import ColorPicker from './ColorPicker';
+import ColourPicker from './ColourPicker';
 import DeleteHabitButton from './DeleteHabitButton';
 
 const BASE_URL = 'https://habit-coach.onrender.com';
 
-const EditHabitButton = ({
+export default function EditHabitButton({
   user,
   habits,
   index,
   habitsChangeHandler,
   style,
   buttonVisibilityHandler,
-}) => {
+}) {
   const [habitName, setHabitName] = useState(habits[index].name);
-  const [habitColor, setHabitColor] = useState(habits[index].color);
+  const [habitColour, setHabitColour] = useState(habits[index].colour);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -100,10 +105,10 @@ const EditHabitButton = ({
                 <FormHelperText>Habit type cannot be changed.</FormHelperText>
               </FormControl>
               <FormControl>
-                <FormLabel>Habit Color</FormLabel>
-                <ColorPicker
-                  color={habitColor}
-                  colorChangeHandler={setHabitColor}
+                <FormLabel>Habit Colour</FormLabel>
+                <ColourPicker
+                  colour={habitColour}
+                  colourChangeHandler={setHabitColour}
                   buttonDisabledStateHandler={setIsButtonDisabled}
                 />
               </FormControl>
@@ -131,13 +136,13 @@ const EditHabitButton = ({
                   } else {
                     const habitsCopy = [...habits];
                     const habitCopy = { ...habitsCopy[index] };
-                    habitCopy.color = habitColor;
+                    habitCopy.colour = habitColour;
                     habitCopy.name = habitName;
                     habitsCopy[index] = habitCopy;
                     habitsChangeHandler(habitsCopy);
                     await axios.put(
                       `${BASE_URL}/api/users/${user.email}/habits/${habits[index].name}`,
-                      { name: habitName, color: habitColor }
+                      { name: habitName, colour: habitColour }
                     );
                     buttonVisibilityHandler({ visibility: 'hidden' });
                     setIsButtonDisabled(true);
@@ -153,6 +158,4 @@ const EditHabitButton = ({
       </Modal>
     </>
   );
-};
-
-export default EditHabitButton;
+}

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+
 import axios from 'axios';
+
 import { useDisclosure, useToast } from '@chakra-ui/react';
 import {
   Button,
@@ -20,16 +22,20 @@ import {
 } from '@chakra-ui/react';
 import { AiOutlinePlus } from 'react-icons/ai';
 
-import ColorPicker from './ColorPicker';
+import ColourPicker from './ColourPicker';
 
 const BASE_URL = 'https://habit-coach.onrender.com';
 
-const AddNewHabitButton = ({ user, habits, habitsChangeHandler }) => {
+export default function AddNewHabitButton({
+  user,
+  habits,
+  habitsChangeHandler,
+}) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [habitName, setHabitName] = useState('');
   const [habitType, setHabitType] = useState('binary');
-  const [habitColor, setHabitColor] = useState('gray');
+  const [habitColour, setHabitColour] = useState('gray');
 
   return (
     <>
@@ -74,10 +80,10 @@ const AddNewHabitButton = ({ user, habits, habitsChangeHandler }) => {
                 </RadioGroup>
               </FormControl>
               <FormControl>
-                <FormLabel>Habit Color</FormLabel>
-                <ColorPicker
-                  color={habitColor}
-                  colorChangeHandler={setHabitColor}
+                <FormLabel>Habit Colour</FormLabel>
+                <ColourPicker
+                  colour={habitColour}
+                  colourChangeHandler={setHabitColour}
                 />
               </FormControl>
             </VStack>
@@ -110,7 +116,7 @@ const AddNewHabitButton = ({ user, habits, habitsChangeHandler }) => {
                     ...habits,
                     {
                       name: habitName,
-                      color: habitColor,
+                      colour: habitColour,
                       type: habitType,
                       state: {},
                     },
@@ -118,12 +124,12 @@ const AddNewHabitButton = ({ user, habits, habitsChangeHandler }) => {
 
                   await axios.post(
                     `${BASE_URL}/api/users/${user.email}/habits`,
-                    { name: habitName, color: habitColor, type: habitType }
+                    { name: habitName, colour: habitColour, type: habitType }
                   );
 
                   setHabitName('');
                   setHabitType('binary');
-                  setHabitColor('gray');
+                  setHabitColour('gray');
                   toast.closeAll();
                   onClose();
                 }
@@ -136,6 +142,4 @@ const AddNewHabitButton = ({ user, habits, habitsChangeHandler }) => {
       </Modal>
     </>
   );
-};
-
-export default AddNewHabitButton;
+}

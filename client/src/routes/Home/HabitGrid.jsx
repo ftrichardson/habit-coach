@@ -1,10 +1,18 @@
-import React from 'react';
 import moment from 'moment/moment';
-import { Flex, Grid, HStack, Text, VStack, useMediaQuery } from '@chakra-ui/react';
+
+import {
+  Flex,
+  Grid,
+  HStack,
+  Text,
+  VStack,
+  useMediaQuery,
+} from '@chakra-ui/react';
+
 import HabitRow from './HabitRow';
 import { squareSideLen } from './HabitRow';
 
-const HabitGrid = ({ user, habits, habitsChangeHandler }) => {
+export default function HabitGrid({ user, habits, habitsChangeHandler }) {
   const [isXlWidth] = useMediaQuery('(min-width: 1700px)');
   const [isLargeWidth] = useMediaQuery('(min-width: 1250px)');
   const [isMediumWidth] = useMediaQuery('(min-width: 900px)');
@@ -18,21 +26,29 @@ const HabitGrid = ({ user, habits, habitsChangeHandler }) => {
     return 2;
   };
 
-  const gridItems = habits.map((_, i) => (
-    <HabitRow
-      user={user}
-      key={i}
-      index={i}
-      habits={habits}
-      habitsChangeHandler={habitsChangeHandler}
-      numDaysToGoBack={getNumDaysToGoBack()}
-    />
-  ));
+  const gridItems = [];
+  for (let i = 0; i < habits.length; i++) {
+    gridItems.push(
+      <HabitRow
+        user={user}
+        key={i}
+        index={i}
+        habits={habits}
+        habitsChangeHandler={habitsChangeHandler}
+        numDaysToGoBack={getNumDaysToGoBack()}
+      />
+    );
+  }
 
-  const dateDays = Array.from({ length: getNumDaysToGoBack() + 1 }, (_, i) => {
-    const earliestDate = moment().subtract(getNumDaysToGoBack(), 'days');
-    return earliestDate.clone().add(i, 'days').toDate();
-  });
+  const dateDays = [];
+  var latestDate = new Date();
+  var earliestDate = new Date(
+    latestDate.getTime() - getNumDaysToGoBack() * 24 * 60 * 60 * 1000
+  );
+  for (let i = 0; i <= getNumDaysToGoBack(); i++) {
+    const date = new Date(earliestDate.getTime() + i * 24 * 60 * 60 * 1000);
+    dateDays.push(date);
+  }
 
   const dateRow = dateDays.map((date) => {
     const isToday = moment(date).isSame(new Date(), 'day');
@@ -43,13 +59,13 @@ const HabitGrid = ({ user, habits, habitsChangeHandler }) => {
         h={75}
         align='center'
         justify='center'
-        key={date.toISOString()}
+        key={date}
       >
         <Text
           fontFamily='Inconsolata'
           fontSize='xl'
           color={isToday ? 'green.500' : 'black'}
-          fontWeight={isToday ? 'bold' : 'normal'}
+          as={isToday ? 'b' : ''}
         >
           {moment(date).format('DD')}
         </Text>
@@ -57,7 +73,7 @@ const HabitGrid = ({ user, habits, habitsChangeHandler }) => {
           fontFamily='Inconsolata'
           fontSize='md'
           color={isToday ? 'green.500' : 'gray'}
-          fontWeight={isToday ? 'bold' : 'normal'}
+          as={isToday ? 'b' : ''}
         >
           {moment(date).format('ddd')}
         </Text>
@@ -65,25 +81,24 @@ const HabitGrid = ({ user, habits, habitsChangeHandler }) => {
     );
   });
 
-  gridItems.unshift(
-    <HStack key={'date-row'}>
+  gridItems.splice(
+    0,
+    0,
+    <HStack key={'this-is-just-to-supress-a-warning-lol'}>
       <Flex minW='10rem' ml={5}></Flex>
       {dateRow}
-      {getNumDaysToGoBack() > 2 && (
-        <Text
-          textAlign='center'
-          as='b'
-          pl={2}
-          fontFamily='Inconsolata'
-          fontSize='lg'
-        >
-          Streak 🔥
-        </Text>
-      )}
+      {getNumDaysToGoBack() > 2 && <Text
+        textAlign='center'
+        as='b'
+        pl={2}
+        fontFamily='Inconsolata'
+        fontSize='lg'
+        style={{ display: 'absolute' }}
+      >
+        Streak 🔥
+      </Text>}
     </HStack>
   );
 
   return <Grid gap={2}>{gridItems}</Grid>;
-};
-
-export default HabitGrid;
+}

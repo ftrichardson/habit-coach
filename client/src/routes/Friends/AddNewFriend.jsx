@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/Layout';
 import axios from 'axios';
@@ -23,76 +24,86 @@ import {
 
 const BASE_URL = 'https://habit-coach.onrender.com';
 
-const Friendfind = () => {
-    const navigate = useNavigate();
-    const toast = useToast();
-    const [userNotFriendData, setUserNotFriendData] = useState([]);
-    const [user, loading] = useAuthState(auth);
-    const [loaded, setLoaded] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('.');
+export default function Friendfind() {
+  const navigate = useNavigate();
+  const toast = useToast();
+  const [userNotFriendData, setUserNotFriendData] = useState([]);
+  const [user, loading] = useAuthState(auth);
+  if (!user) navigate('../', {});
+  const [loaded, setLoaded] = useState(false);
+  let [searchTerm, setSearchTerm] = useState('.');
 
-    useEffect(() => {
-      if (!user) navigate('../', {});
-    }, [user, navigate]);
-
-    const getAllNotFriends = useCallback(async () => {
-      try {
-        if (!loading) {
-          const response = await axios.get(`${BASE_URL}/api/users/${user.email}/notfriends`);
+  const getAllNotFriends = async () => {
+    if (!loading) {
+      await axios
+        .get(`${BASE_URL}/api/users/${user.email}/notfriends`)
+        .then(function (response) {
           setUserNotFriendData(response.data.not_friends_name_email);
-        }
-      } catch (err) {
-        console.log(err);
-        toast({
-          title: 'Error occurred.',
-          description: 'Could not get details of users.',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
+          // console.log(response.data.friends_name_email);
+          // console.log(userFriendData);
+        })
+        .catch(function (err) {
+          console.log(err);
+          toast({
+            title: 'Error occured.',
+            description: 'Could not get details of users.',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          });
         });
-      }
-    }, [loading, toast, user]);
+    }
+  };
 
-    const getSearchedFriends = (event) => {
-      setSearchTerm(event.target.value);
-    };
+  //Search Functionality
+  const getSearchedFriends = (event) => {
+    setSearchTerm(event.target.value);
+    // console.log(event.target.value);
+  };
 
-    const followFriend = async (e) => {
-      e.preventDefault();
-      const buttonIndex = Number(e.target.id);
-      const friendEmailId = userNotFriendData[buttonIndex][0];
+  //Follow friend Functionality
+  const FollowFriend = async (e) => {
+    e.preventDefault();
+    let button_index = Number(e.target.id); //index is stored in id field
+    // console.log(button_index);
 
-      try {
-        await axios.put(`${BASE_URL}/api/users/${user.email}/notfriends`, {
-          friendEmail: friendEmailId,
-        });
+    //using index fetch that friend email id
+    let friend_email_id = userNotFriendData[button_index][0];
+    // console.log(friend_email_id);
+
+    //call update api
+
+    await axios
+      .put(`${BASE_URL}/api/users/${user.email}/notfriends`, {
+        friendEmail: friend_email_id,
+      })
+      .then(function (response) {
         setLoaded(false);
-        toast({
-          title: 'Success!',
-          description: `Added ${userNotFriendData[buttonIndex][1]} as a new friend.`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-        });
-      } catch (err) {
+      })
+      .catch(function (err) {
         console.log(err);
         toast({
-          title: 'Error occurred.',
-          description: 'Could not follow the user.',
+          title: 'Error occured.',
+          description: 'Could not Follow user.',
           status: 'error',
           duration: 9000,
           isClosable: true,
         });
-      }
-    };
+      });
+    toast({
+      title: 'Success!',
+      description: `Added ${userNotFriendData[button_index][1]} as new friend.`,
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+    });
+  };
 
-    useEffect(() => {
-      if (!loading && !loaded) {
-        getAllNotFriends();
-        setLoaded(true);
-      }
-    }, [loading, loaded, getAllNotFriends]);
-
+  if (!loading) {
+    if (!loaded) {
+      getAllNotFriends();
+      setLoaded(true);
+    }
     return (
       <Layout user={user} currentRoute='friendfind'>
         <Container
@@ -117,10 +128,11 @@ const Friendfind = () => {
               {userNotFriendData.length >= 1 &&
                 userNotFriendData
                   .filter((elem) => elem[1].match(new RegExp(searchTerm, 'gi')))
+                  // .filter((elem) => elem[0] !== user.email)
                   .map((item, index) => {
                     if (item[0] !== user.email) {
                       return (
-                        <ListItem mb={3} key={index}>
+                        <ListItem mb={3}>
                           <Card size='sm'>
                             <CardBody>
                               <HStack justifyContent='space-between'>
@@ -128,7 +140,7 @@ const Friendfind = () => {
                                 <Button
                                   id={index}
                                   colorScheme='green'
-                                  onClick={followFriend}
+                                  onClick={FollowFriend}
                                 >
                                   Add
                                 </Button>
@@ -138,13 +150,11 @@ const Friendfind = () => {
                         </ListItem>
                       );
                     }
-                    return null;
                   })}
             </List>
           </VStack>
         </Container>
       </Layout>
     );
-};
-
-export default Friendfind;
+  }
+}

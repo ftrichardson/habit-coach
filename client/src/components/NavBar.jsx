@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Button,
@@ -12,35 +11,23 @@ import {
   MenuList,
   useMediaQuery,
 } from '@chakra-ui/react';
+import { logout } from '../routes/Auth/firebase';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../routes/Auth/firebase';
 
-/**
- * Logo component for displaying the application logo.
- *
- * @returns {ReactNode} - JSX element representing the logo.
- */
-const Logo = () => (
-  <Box boxSize='3rem'>
-    <Link href='/'>
-      <Image src='logo.png' alt='Logo' />
-    </Link>
-  </Box>
-);
+const Logo = () => {
+  return (
+    <Box boxSize='3rem'>
+      <Link href='/'>
+        <Image src='logo.png' alt='Logo' />
+      </Link>
+    </Box>
+  );
+};
 
-/**
- * NavBar component for rendering the navigation bar.
- *
- * @param {Object} props - Component props.
- * @param {string} props.currentRoute - Current route for navigation.
- * @param {Object} props.user - User information.
- * @returns {ReactNode} - JSX element representing the navigation bar.
- */
-const NavBar = ({ currentRoute, user }) => {
+export default function NavBar({ currentRoute, user }) {
   const navigate = useNavigate();
   const [isSmallWidth] = useMediaQuery('(max-width: 800px)');
-
   return (
     <HStack justifyContent='space-between' p={5}>
       <HStack>
@@ -122,6 +109,4 @@ const NavBar = ({ currentRoute, user }) => {
       </HStack>
     </HStack>
   );
-};
-
-export default NavBar;
+}

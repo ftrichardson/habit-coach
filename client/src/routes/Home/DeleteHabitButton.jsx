@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
-import axios from 'axios';
+import { useRef } from 'react';
+
 import { useDisclosure } from '@chakra-ui/react';
+
 import {
   AlertDialog,
   AlertDialogBody,
@@ -11,22 +12,19 @@ import {
   Button,
 } from '@chakra-ui/react';
 
+import axios from 'axios';
+
 const BASE_URL = 'https://habit-coach.onrender.com';
 
-const DeleteHabitButton = ({ user, habits, habitsChangeHandler, index, parentModelOnClose }) => {
+export default function DeleteHabitButton({
+  user,
+  habits,
+  habitsChangeHandler,
+  index,
+  parentModelOnClose,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
-
-  const handleDelete = async () => {
-    const habitsCopy = [...habits];
-    habitsCopy.splice(index, 1);
-    habitsChangeHandler(habitsCopy);
-
-    await axios.delete(`${BASE_URL}/api/users/${user.email}/habits/${habits[index].name}`, {});
-
-    onClose();
-    parentModelOnClose();
-  };
 
   return (
     <>
@@ -52,7 +50,21 @@ const DeleteHabitButton = ({ user, habits, habitsChangeHandler, index, parentMod
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme='red' onClick={handleDelete} ml={3}>
+              <Button
+                colorScheme='red'
+                onClick={async () => {
+                  const habitsCopy = [...habits];
+                  habitsCopy.splice(index, 1);
+                  habitsChangeHandler(habitsCopy);
+                  await axios.delete(
+                    `${BASE_URL}/api/users/${user.email}/habits/${habits[index].name}`,
+                    {}
+                  );
+                  onClose();
+                  parentModelOnClose();
+                }}
+                ml={3}
+              >
                 Delete
               </Button>
             </AlertDialogFooter>
@@ -61,6 +73,4 @@ const DeleteHabitButton = ({ user, habits, habitsChangeHandler, index, parentMod
       </AlertDialog>
     </>
   );
-};
-
-export default DeleteHabitButton;
+}

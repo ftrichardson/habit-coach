@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
 import moment from 'moment/moment';
+
 import axios from 'axios';
+
 import {
   Flex,
   HStack,
@@ -11,16 +12,18 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
+import { useState } from 'react';
+
 import EditHabitButton from './EditHabitButton';
 
 export const squareSideLen = 50;
 
 const BASE_URL = 'https://habit-coach.onrender.com';
 
-const isNumeric = (str) => {
-  if (typeof str !== 'string') return false;
+function isNumeric(str) {
+  if (typeof str != 'string') return false;
   return !isNaN(str) && !isNaN(parseFloat(str));
-};
+}
 
 const NumericalHabitUnit = ({
   user,
@@ -33,10 +36,9 @@ const NumericalHabitUnit = ({
 }) => {
   const toast = useToast();
   const [currentVal, setCurrentVal] = useState(
-    habits[index]?.state[dateString] || ''
+    habits[index]['state'][dateString] ? habits[index]['state'][dateString] : ''
   );
   const [editMode, setEditMode] = useState(false);
-
   if (editMode) {
     return (
       <Input
@@ -49,7 +51,9 @@ const NumericalHabitUnit = ({
         p={1}
         textAlign='center'
         value={currentVal}
-        onChange={(event) => setCurrentVal(event.target.value)}
+        onChange={(event) => {
+          setCurrentVal(event.target.value);
+        }}
         onKeyUp={async (event) => {
           if (event.key === 'Enter' || event.keyCode === 13) {
             if (!isNumeric(event.target.value) && event.target.value) {
@@ -61,7 +65,7 @@ const NumericalHabitUnit = ({
             }
             const habitsCopy = [...habits];
             const habitCopy = { ...habitsCopy[index] };
-            habitCopy.state[dateString] = currentVal;
+            habitCopy['state'][dateString] = currentVal;
             habitsCopy[index] = habitCopy;
             habitsChangeHandler(habitsCopy);
             await axios.put(
@@ -78,26 +82,29 @@ const NumericalHabitUnit = ({
       />
     );
   }
-
   return (
     <VStack
       minW='100%'
       spacing={0}
-      onClick={() => setEditMode(true)}
+      onClick={() => {
+        setEditMode(true);
+      }}
     >
       <Text fontFamily='Inconsolata' fontSize='md'>
-        {habits[index]?.state[dateString] || '-'}
+        {habits[index].state[dateString]
+          ? habits[index].state[dateString]
+          : '-'}
       </Text>
-      {habits[index]?.state[dateString] &&
-        habits[index]?.state[dates[i - 1]] &&
+      {habits[index].state[dateString] &&
+        habits[index].state[dates[i - 1]] &&
         i > 0 &&
-        parseFloat(habits[index]?.state[dates[i]]) !==
-          parseFloat(habits[index]?.state[dates[i - 1]]) && (
+        parseFloat(habits[index].state[dates[i]]) !==
+          parseFloat(habits[index].state[dates[i - 1]]) && (
           <Stat>
             <StatArrow
               type={
-                parseFloat(habits[index]?.state[dates[i]]) >
-                parseFloat(habits[index]?.state[dates[i - 1]])
+                parseFloat(habits[index].state[dates[i]]) >
+                parseFloat(habits[index].state[dates[i - 1]])
                   ? 'increase'
                   : 'decrease'
               }
@@ -109,70 +116,67 @@ const NumericalHabitUnit = ({
   );
 };
 
-const HabitRow = ({
+export default function HabitRow({
   user,
   habits,
   index,
   habitsChangeHandler,
   numDaysToGoBack,
-}) => {
+}) {
   const rowItems = [];
   const dates = [];
-  const latestDate = new Date();
-  const earliestDate = new Date(
+  var latestDate = new Date();
+  var earliestDate = new Date(
     latestDate.getTime() - numDaysToGoBack * 24 * 60 * 60 * 1000
   );
-
   for (let i = 0; i <= numDaysToGoBack; i++) {
     const date = new Date(earliestDate.getTime() + i * 24 * 60 * 60 * 1000);
     const dateString = moment(date).format('YYYY-MM-DD');
     dates.push(dateString);
-    const state = habits[index]?.state[dateString];
-    let squareColor = '';
-
+    const state = habits[index].state[dateString];
+    let squareColour = '';
     if (state === 1) {
-      squareColor = `${habits[index]?.color}.400`;
+      squareColour = `${habits[index].colour}.400`;
     } else if (
       state === 2 ||
-      (habits[index]?.type === 'numerical' && habits[index]?.state[dateString])
+      (habits[index].type === 'numerical' && habits[index].state[dateString])
     ) {
-      squareColor = `${habits[index]?.color}.100`;
+      squareColour = `${habits[index].colour}.100`;
     }
 
     rowItems.push(
       <Flex
         w={squareSideLen}
         h={squareSideLen}
-        backgroundColor={squareColor}
-        key={`${habits[index]?.name}-${dateString}`}
+        backgroundColor={squareColour}
+        key={`${habits[index].name}-${dateString}`}
         borderRadius='15%'
         border='1px solid gray'
         _hover={{ cursor: 'pointer' }}
         align='center'
         justify='center'
         onClick={async () => {
-          if (habits[index]?.type === 'binary') {
+          if (habits[index].type === 'binary') {
             const habitsCopy = [...habits];
-            const currentState = habitsCopy[index]?.state[dateString];
+            const currentState = habitsCopy[index].state[dateString];
             const newState = currentState ? (currentState + 1) % 2 : 1;
             const habitCopy = { ...habitsCopy[index] };
             habitCopy.state[dateString] = newState;
             habitsCopy[index] = habitCopy;
             habitsChangeHandler(habitsCopy);
             await axios.put(
-              `${BASE_URL}/api/users/${user.email}/habits/${habits[index]?.name}`,
+              `${BASE_URL}/api/users/${user.email}/habits/${habits[index].name}`,
               {
-                name: habits[index]?.name,
+                name: habits[index].name,
                 state: newState,
                 stateDate: dateString,
               }
             );
           } else {
-            // Handle other types of habits
           }
         }}
       >
-        {habits[index]?.type === 'numerical' && (
+        {habits[index].type === 'numerical' && (
           <NumericalHabitUnit
             user={user}
             habits={habits}
@@ -188,9 +192,9 @@ const HabitRow = ({
   }
 
   const getDatesInRange = (startDate, endDate) => {
-    const dates = [];
-    let currDate = moment(startDate).startOf('day');
-    const lastDate = moment(endDate).startOf('day');
+    var dates = [];
+    var currDate = moment(startDate).startOf('day');
+    var lastDate = moment(endDate).startOf('day');
     while (currDate.add(1, 'days').diff(lastDate) < 1) {
       dates.push(currDate.clone().toDate());
     }
@@ -202,15 +206,17 @@ const HabitRow = ({
       (dateString) => new Date(dateString)
     );
 
-    dateArr.sort((a, b) => b - a);
-    const allDates = getDatesInRange(dateArr[dateArr.length - 1], new Date());
+    dateArr.sort(function (a, b) {
+      return b - a;
+    });
+    const allDates = getDatesInRange(dateArr[dateArr.length - 1], new Date()); // State object in mongo doesn't have all dates. this array fixes that.
     allDates.reverse();
 
     let currentStreak = 0;
 
     for (let i = 0; i < allDates.length; i++) {
-      const dateString = moment(allDates[i]).format('YYYY-MM-DD');
-      if (!(dateString in stateDict)) {
+      let dateString = moment(allDates[i]).format('YYYY-MM-DD');
+      if (!dateString in stateDict) {
         return currentStreak;
       } else if (stateDict[dateString] === 1) {
         currentStreak++;
@@ -229,11 +235,9 @@ const HabitRow = ({
         pl={10}
         fontFamily='Inconsolata'
         fontSize='lg'
-        key={'streak-text'}
+        style={{ display: 'absolute' }}
       >
-        {habits[index]?.type === 'binary'
-          ? calculateStreak(habits[index]?.state)
-          : '-'}
+        {habits[index]['type'] === 'binary' ? calculateStreak(habits[index].state) : '-'}
       </Text>
     );
   }
@@ -259,12 +263,10 @@ const HabitRow = ({
           buttonVisibilityHandler={setStyle}
         />
         <Text fontFamily='Inconsolata' fontSize='xl' as='b' minW='5rem'>
-          {habits[index]?.name}
+          {habits[index].name}
         </Text>
       </HStack>
       {rowItems}
     </HStack>
   );
-};
-
-export default HabitRow;
+}
