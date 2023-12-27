@@ -50,7 +50,7 @@ export default function Register() {
       return;
     }
     if (user) navigate('../Home');
-  }, [user, loading]);
+  }, [user, loading, navigate]);
 
   const getExistingUsers = () => {
     if (!loading) {

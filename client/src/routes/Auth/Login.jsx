@@ -41,7 +41,7 @@ export default function Login() {
       return;
     }
     if (user) navigate('../Home');
-  }, [user, loading]);
+  }, [user, loading, navigate]);
 
   return (
     <Layout currentRoute='login'>

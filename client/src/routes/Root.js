@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 
 export default function Root() {
-  const [user, loading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   return (
     <Layout currentRoute='root' user={user}>
       <Container maxW='100%'>
